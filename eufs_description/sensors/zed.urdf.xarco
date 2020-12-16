@@ -58,7 +58,7 @@ ZED camera at WVGA 100 fps
 
 
 <gazebo reference="${prefix}_left_camera_optical_frame">
-  <sensor type="multicamera" name="stereo_camera">
+  <sensor type="depth" name="stereo_camera">
     <!-- see MultiSenseSLPlugin.h for available modes -->
     <update_rate>100.0</update_rate>
     <camera name="${prefix}_left">
@@ -99,20 +99,31 @@ ZED camera at WVGA 100 fps
           <stddev>0.007</stddev>
         </noise>
       </camera>
-      <plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
+      <plugin name="stereo_camera_controller" filename="libgazebo_ros_openni_kinect.so">
+        <baseline>0.2</baseline>
         <alwaysOn>true</alwaysOn>
-        <updateRate>100.0</updateRate>
+        <!-- Keep this zero, update_rate in the parent <sensor> tag
+          will control the frame rate. -->
+        <updateRate>0.0</updateRate>
         <cameraName>${prefix}</cameraName>
-        <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <imageTopicName>/zed/left/image_rect_color</imageTopicName>
+        <cameraInfoTopicName>/zed/left/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>/zed/depth/depth_registered</depthImageTopicName>
+        <depthImageCameraInfoTopicName>/zed/depth/camera_info</depthImageCameraInfoTopicName>
+        <pointCloudTopicName>/zed/depth/points</pointCloudTopicName>
         <frameName>/${prefix}_frame</frameName>
-        <!--<rightFrameName>right_camera_optical_frame</rightFrameName>-->
-        <hackBaseline>0.120</hackBaseline> <!-- the baseline shifts the left camera -->
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
+        <pointCloudCutoff>0.5</pointCloudCutoff>
+        <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+        <distortionK1>0</distortionK1>
+        <distortionK2>0</distortionK2>
+        <distortionK3>0</distortionK3>
+        <distortionT1>0</distortionT1>
+        <distortionT2>0</distortionT2>
+        <CxPrime>0</CxPrime>
+        <Cx>0</Cx>
+        <Cy>0</Cy>
+        <focalLength>0</focalLength>
+        <hackBaseline>0</hackBaseline>
       </plugin>
     </sensor>
   </gazebo>
